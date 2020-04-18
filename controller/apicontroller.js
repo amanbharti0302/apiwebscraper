@@ -2,47 +2,26 @@ const request = require('request');
 const cheerio = require('cheerio');
 const getUrls = require('get-urls');
 const express = require('express');
-var htmlcomments = require('html-comments');
 
 exports.linkcreater = async(req,res)=>{
     try{
         request('https://yourstory.com/mystory/news-sitemap.xml',(error,response,html)=>{
             var data = [];
             const $ = cheerio.load(html);
-            // var as = $.text();
-            // as = as.split('\n');
+            var as = $.text();
+            as = as.split('\n');
 
-            // as.map((el,id)=>{
-            //   const link = el.split(' ')[1];
-            //   var date = el.split(' ')[2];
-
-
-            //   if(link&&date)  
-            //   data.push({
-            //     link:link,
-            //     date:(date.replace("YourStoryen","")).split('T')[0]
-            //   })
-            // })
-     
-            // res.status(200).json({
-            //     status: 'success',
-            //     data
-            //   });
-
-            var ned = $.html();
-            ned = ned.split('\n');
-            ned.map((el,id)=>{
-              const textmessage = htmlcomments.load(el);
-              const link = getUrls(JSON.stringify(el)).values();
-              data.push({textmessage,link});
-
+            as.map((el,id)=>{
+              const link = el.split(' ')[1];
+              var date = el.split(' ')[2];
+              if(link&&date)  
+              data.push({link:link,date:(date.replace("YourStoryen","")).split('T')[0]})
             })
+     
             res.status(200).json({
                 status: 'success',
                 data
               });
-
-
             })
 
     }catch(err)
@@ -70,6 +49,7 @@ exports.getdataofalink = async(req,res)=>{
         text:text,
         link:link
       });
+
 
     })
 
